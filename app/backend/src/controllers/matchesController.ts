@@ -22,4 +22,10 @@ export default class MatchesController {
     const result = await this.matchesService.getMatchesById(id);
     return res.status(200).json(result);
   }
+
+  async createMatches(req: Request, res: Response) {
+    const { homeTeam, awayTeam, homeTeamGoals, awayTeamGoals } = req.body
+    const result = await this.matchesService.createMatches( homeTeam, awayTeam, homeTeamGoals, awayTeamGoals );
+    return res.status(201).json(result);
+  }
 }

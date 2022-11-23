@@ -32,9 +32,14 @@ export default class MatchesService {
     return matches;
   }
 
+  public async createMatches( homeTeam:string, awayTeam:string, homeTeamGoals:string, awayTeamGoals:string ): Promise<Matches | null> {
+    const matches = await this.matches.create({homeTeam, awayTeam, homeTeamGoals, awayTeamGoals, inProgress: true});
+    return matches;
+  }
+
 }
 
-// 
+// createMatches
 
 // export default class UserService {
 //   userModel = new UserModel();
