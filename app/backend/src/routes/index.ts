@@ -9,5 +9,4 @@ router.use('/login', Login);
 router.use('/teams', Teams);
 router.use('/matches', Matches);
 
-
 export default router;
