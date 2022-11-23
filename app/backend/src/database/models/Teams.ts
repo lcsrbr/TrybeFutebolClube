@@ -1,5 +1,6 @@
 import { Model, INTEGER, STRING } from 'sequelize';
 import db from '.';
+import Matches from './Matches';
 
 class Teams extends Model {
   declare id: number;
