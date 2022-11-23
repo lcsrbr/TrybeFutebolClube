@@ -11,8 +11,6 @@ export default class LoginService {
   constructor(private users = Users) {}
 
   public async getUserRoleWithToken(authorization: string):Promise<Users | null> {
-    console.log(authorization, 'auhthoirization');
-
     const userToken = this.jwt.validateToken(authorization);
     const login = userToken && await this.users.findOne({ where: { email: userToken.email } });
     return login;

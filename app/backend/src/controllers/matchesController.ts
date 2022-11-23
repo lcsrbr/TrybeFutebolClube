@@ -36,8 +36,7 @@ export default class MatchesController {
     if (!verifyUser || !authorization) {
       return res.status(401).json({ message: 'Token must be a valid token' });
     }
-    const verifyTeams = await this.teamsService.getTeamsById(homeTeam)
-    && await this.teamsService.getTeamsById(awayTeam);
+    const verifyTeams = await this.teamsService.getTeamsById(homeTeam) && await this.teamsService.getTeamsById(awayTeam);
     if (!verifyTeams) {
       return res.status(404).json({ message: 'There is no team with such id!' });
     }
@@ -55,5 +54,13 @@ export default class MatchesController {
     await this.matchesService.updateProgressMatches(id);
     return res.status(200).json({ message: 'Finished' });
   }
+
+  async updateGoalsMatches(req: Request, res: Response) {
+    const { id } = req.params;
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+    await this.matchesService.updateGoalsMatches(id, homeTeamGoals, awayTeamGoals);
+    return res.status(200).json({ message: 'Updated' });
+  }
 }
-// updateProgressMatches
+
+// updateGoalsMatches
