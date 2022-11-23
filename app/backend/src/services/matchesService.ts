@@ -37,9 +37,13 @@ export default class MatchesService {
     return matches;
   }
 
+  public async updateProgressMatches( id: string ): Promise<void | null> {
+    await this.matches.update({inProgress: false},{ where: {id}});
+  }
+
 }
 
-// createMatches
+// updateProgressMatches
 
 // export default class UserService {
 //   userModel = new UserModel();

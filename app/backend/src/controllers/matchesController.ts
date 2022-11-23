@@ -28,4 +28,12 @@ export default class MatchesController {
     const result = await this.matchesService.createMatches( homeTeam, awayTeam, homeTeamGoals, awayTeamGoals );
     return res.status(201).json(result);
   }
+
+  async updateProgressMatches(req: Request, res: Response) {
+    const { id } = req.params
+    await this.matchesService.updateProgressMatches( id );
+    return res.status(200).json({message: "Finished"});
+  }
+
 }
+// updateProgressMatches
