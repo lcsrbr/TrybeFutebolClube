@@ -21,7 +21,7 @@ export default class MatchesService {
   }
 
   public async getMatchesByProgress(param: string): Promise<Matches[]> {
-    const inProgress = JSON.parse(param);
+    const inProgress = JSON.parse(param); // transformar string em boolean
     const matches = await this.matches.findAll({
       where: { inProgress },
       include: [
