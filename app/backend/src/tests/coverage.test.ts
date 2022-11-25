@@ -161,3 +161,28 @@ describe('teste teams', () => {
     expect(chaiHttpResponse.status).to.be.eq(200)
   })
 })
+  
+
+describe('teste leaderboard', () => {
+  let chaiHttpResponse: Response;
+  afterEach(sinon.restore);
+
+
+  it('leaderboard get', async () => {
+    chaiHttpResponse = await chai.request(app).get('/leaderboard').send()
+    expect(chaiHttpResponse.status).to.be.eq(200)
+  })
+
+  it('leaderboard get home', async () => {
+    chaiHttpResponse = await chai.request(app).get('/leaderboard/home').send()
+    expect(chaiHttpResponse.status).to.be.eq(200)
+  })
+  it('leaderboard get away', async () => {
+    chaiHttpResponse = await chai.request(app).get('/leaderboard/away').send()
+    expect(chaiHttpResponse.status).to.be.eq(200)
+  })
+  it('leaderboard get teste', async () => {
+    chaiHttpResponse = await chai.request(app).get('/leaderboard/teste').send()
+    expect(chaiHttpResponse.status).to.be.eq(200)
+  })
+})
