@@ -135,7 +135,6 @@ export default class lbService {
 
       // total de pontos
       matches.forEach((match) => {
-
         if (team.id === match.awayTeam && match.homeTeamGoals < match.awayTeamGoals) {
           overAll.totalPoints += 3;
         }
@@ -293,26 +292,6 @@ export default class lbService {
       || b.goalsFavor - a.goalsFavor
       || b.goalsOwn + a.goalsOwn);
     return Promise.all(testeSort);
-  }
-
-  public async getHomeLbTeste(): Promise<any[]> {
-    const matches: any = await Matches.findAll({
-      where: { inProgress: false },
-      include: [
-        { model: Teams, as: 'teamHome', attributes: { exclude: ['id'] } },
-        { model: Teams, as: 'teamAway', attributes: { exclude: ['id'] } },
-      ],
-    });
-    const teste = await Promise.all(matches.map((match: any) => {
-      if (match.homeTeamGoals > match.awayTeamGoals) {
-        return `na partida de id ${match.id} entre os times ${match.teamHome.teamName} e ${match.teamAway.teamName}, o time ${match.teamHome.teamName} foi vitorioso com placar de ${match.homeTeamGoals} x ${match.awayTeamGoals}`;
-      }
-      if (match.homeTeamGoals < match.awayTeamGoals) {
-        return `na partida de id ${match.id} entre os times ${match.teamAway.teamName} e ${match.teamHome.teamName}, o time ${match.teamAway.teamName} foi vitorioso com placar de ${match.awayTeamGoals} x ${match.homeTeamGoals}`;
-      }
-      return `na partida de id ${match.id} os times ${match.teamHome.teamName} e ${match.teamAway.teamName} empataram em ${match.homeTeamGoals} x ${match.awayTeamGoals}`;
-    }));
-    return teste;
   }
 }
 
