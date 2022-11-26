@@ -1,5 +1,4 @@
 // import HttpException from '../shared/http.exception';
-import { compareSync } from 'bcryptjs';
 import Users from '../database/models/Users';
 import Jwt from '../jwt';
 
@@ -16,25 +15,8 @@ export default class LoginService {
     return login;
   }
 
-  public async validateLogin(email:string, password:string) :Promise<Users | number> {
-    if (!email || !password) {
-      return 400;
-    }
+  public async validateLogin(email:string) :Promise<Users | null> {
     const login = await this.users.findOne({ where: { email } });
-    const compare = login && compareSync(password, login.password);
-    if (compare) {
-      return login;
-    }
-    return 401;
+    return login;
   }
 }
-
-// export default class UserService {
-//   userModel = new UserModel();
-
-//   async insertUser(user: IUser): Promise<string> {
-//     await this.userModel.insertUser(user);
-//     const result = await this.createToken(user);
-//     return result;
-//   }
-// }

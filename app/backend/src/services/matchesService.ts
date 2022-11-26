@@ -47,19 +47,11 @@ export default class MatchesService {
     await this.matches.update({ inProgress: false }, { where: { id } });
   }
 
-  public async updateGoalsMatches(id: string, homeTeamGoals: string, awayTeamGoals: string): Promise<void | null> {
+  public async updateGoalsMatches(
+    id: string,
+    homeTeamGoals: string,
+    awayTeamGoals: string,
+  ): Promise<void | null> {
     await this.matches.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
   }
 }
-
-// updateGoalsMatches
-
-// export default class UserService {
-//   userModel = new UserModel();
-
-//   async insertUser(user: IUser): Promise<string> {
-//     await this.userModel.insertUser(user);
-//     const result = await this.createToken(user);
-//     return result;
-//   }
-// }

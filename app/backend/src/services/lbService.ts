@@ -1,215 +1,32 @@
+import IMatchesWithName from '../interfaces/IMatchesWithName';
+import IOverAll from '../interfaces/IOverAll';
 import Teams from '../database/models/Teams';
 import Matches from '../database/models/Matches';
-// const bcrypt = require('bcryptjs');
 
-export default class lbService {
-  public async getLb(): Promise<any> {
-    const teams = await Teams.findAll();
-    const matches = await Matches.findAll({
-      where: { inProgress: false },
-    });
-    const teste = teams.map((team) => {
-      const overAll = {
-        name: team.teamName,
-        totalPoints: 0,
-        totalGames: 0,
-        totalVictories: 0,
-        totalDraws: 0,
-        totalLosses: 0,
-        goalsFavor: 0,
-        goalsOwn: 0,
-        goalsBalance: 0,
-        efficiency: 0,
-      };
+export default class LbService {
+  private _teams: Teams[] = [];
+  private _matches: IMatchesWithName[] = [];
+  private _overAll: IOverAll[] = [];
 
-      // total de pontos
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam && match.homeTeamGoals > match.awayTeamGoals) {
-          overAll.totalPoints += 3;
-        }
-        if (team.id === match.awayTeam && match.homeTeamGoals < match.awayTeamGoals) {
-          overAll.totalPoints += 3;
-        }
-        if (team.id === match.homeTeam && match.homeTeamGoals === match.awayTeamGoals) {
-          overAll.totalPoints += 1;
-        }
-        if (team.id === match.awayTeam && match.homeTeamGoals === match.awayTeamGoals) {
-          overAll.totalPoints += 1;
-        }
-      });
-
-      // total de jogos
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam || team.id === match.awayTeam) {
-          overAll.totalGames += 1;
-        }
-      });
-
-      // total de vitórias
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam && match.homeTeamGoals > match.awayTeamGoals) {
-          overAll.totalVictories += 1;
-        }
-        if (team.id === match.awayTeam && match.homeTeamGoals < match.awayTeamGoals) {
-          overAll.totalVictories += 1;
-        }
-      });
-
-      // total de empates
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam && match.homeTeamGoals === match.awayTeamGoals) {
-          overAll.totalDraws += 1;
-        }
-        if (team.id === match.awayTeam && match.homeTeamGoals === match.awayTeamGoals) {
-          overAll.totalDraws += 1;
-        }
-      });
-
-      // total de derrotas
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam && match.homeTeamGoals < match.awayTeamGoals) {
-          overAll.totalLosses += 1;
-        }
-        if (team.id === match.awayTeam && match.homeTeamGoals > match.awayTeamGoals) {
-          overAll.totalLosses += 1;
-        }
-      });
-
-      // total de gols a favor
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam) {
-          overAll.goalsFavor += match.homeTeamGoals;
-        }
-        if (team.id === match.awayTeam) {
-          overAll.goalsFavor += match.awayTeamGoals;
-        }
-      });
-
-      // total de gols contra
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam) {
-          overAll.goalsOwn += match.awayTeamGoals;
-        }
-        if (team.id === match.awayTeam) {
-          overAll.goalsOwn += match.homeTeamGoals;
-        }
-      });
-
-      // total media de gols
-      overAll.goalsBalance = overAll.goalsFavor - overAll.goalsOwn;
-
-      // aproveitamento
-      // [P / (J * 3)] * 100
-      overAll.efficiency = Number(((overAll.totalPoints / (overAll.totalGames * 3)) * 100).toFixed(2));
-
-      return overAll;
-    });
-
-    const testeSort = [...teste].sort((a, b) =>
-      b.totalPoints - a.totalPoints
-      || b.totalVictories - a.totalVictories
-      || b.goalsBalance - a.goalsBalance
-      || b.goalsFavor - a.goalsFavor
-      || b.goalsOwn + a.goalsOwn);
-    return Promise.all(testeSort);
+  async getTeams() {
+    this._teams = await Teams.findAll();
+    const aa = await Teams.findAll();
+    return aa;
   }
 
-  public async getAwayLb(): Promise<any> {
-    const teams = await Teams.findAll();
-    const matches = await Matches.findAll({
+  async getMatches() {
+    this._matches = await Matches.findAll({
       where: { inProgress: false },
+      include: [
+        { model: Teams, as: 'teamHome', attributes: { exclude: ['id'] } },
+        { model: Teams, as: 'teamAway', attributes: { exclude: ['id'] } },
+      ],
     });
-    const teste = teams.map((team) => {
-      const overAll = {
-        name: team.teamName,
-        totalPoints: 0,
-        totalGames: 0,
-        totalVictories: 0,
-        totalDraws: 0,
-        totalLosses: 0,
-        goalsFavor: 0,
-        goalsOwn: 0,
-        goalsBalance: 0,
-        efficiency: 0,
-      };
-
-      // total de pontos
-      matches.forEach((match) => {
-        if (team.id === match.awayTeam && match.homeTeamGoals < match.awayTeamGoals) {
-          overAll.totalPoints += 3;
-        }
-        if (team.id === match.awayTeam && match.homeTeamGoals === match.awayTeamGoals) {
-          overAll.totalPoints += 1;
-        }
-      });
-
-      // total de jogos
-      matches.forEach((match) => {
-        if (team.id === match.awayTeam) {
-          overAll.totalGames += 1;
-        }
-      });
-
-      // total de vitórias
-      matches.forEach((match) => {
-        if (team.id === match.awayTeam && match.homeTeamGoals < match.awayTeamGoals) {
-          overAll.totalVictories += 1;
-        }
-      });
-
-      // total de empates
-      matches.forEach((match) => {
-        if (team.id === match.awayTeam && match.homeTeamGoals === match.awayTeamGoals) {
-          overAll.totalDraws += 1;
-        }
-      });
-
-      // total de derrotas
-      matches.forEach((match) => {
-        if (team.id === match.awayTeam && match.homeTeamGoals > match.awayTeamGoals) {
-          overAll.totalLosses += 1;
-        }
-      });
-
-      // total de gols a favor
-      matches.forEach((match) => {
-        if (team.id === match.awayTeam) {
-          overAll.goalsFavor += match.awayTeamGoals;
-        }
-      });
-
-      // total de gols contra
-      matches.forEach((match) => {
-        if (team.id === match.awayTeam) {
-          overAll.goalsOwn += match.homeTeamGoals;
-        }
-      });
-
-      // total media de gols
-      overAll.goalsBalance = overAll.goalsFavor - overAll.goalsOwn;
-
-      // aproveitamento
-      // [P / (J * 3)] * 100
-      overAll.efficiency = Number(((overAll.totalPoints / (overAll.totalGames * 3)) * 100).toFixed(2));
-
-      return overAll;
-    });
-
-    const testeSort = [...teste].sort((a, b) =>
-      b.totalPoints - a.totalPoints
-      || b.totalVictories - a.totalVictories
-      || b.goalsBalance - a.goalsBalance
-      || b.goalsFavor - a.goalsFavor
-      || b.goalsOwn + a.goalsOwn);
-    return Promise.all(testeSort);
+    return this._matches;
   }
 
-  public async getHomeLb(): Promise<any> {
-    const teams = await Teams.findAll();
-    const matches = await Matches.findAll({
-      where: { inProgress: false },
-    });
-    const teste = teams.map((team) => {
+  getOverAll() {
+    this._overAll = this._teams.map((team) => {
       const overAll = {
         name: team.teamName,
         totalPoints: 0,
@@ -222,85 +39,103 @@ export default class lbService {
         goalsBalance: 0,
         efficiency: 0,
       };
-
-      // total de pontos
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam && match.homeTeamGoals > match.awayTeamGoals) {
-          overAll.totalPoints += 3;
-        }
-        if (team.id === match.homeTeam && match.homeTeamGoals === match.awayTeamGoals) {
-          overAll.totalPoints += 1;
-        }
-      });
-
-      // total de jogos
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam) {
-          overAll.totalGames += 1;
-        }
-      });
-
-      // total de vitórias
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam && match.homeTeamGoals > match.awayTeamGoals) {
-          overAll.totalVictories += 1;
-        }
-      });
-
-      // total de empates
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam && match.homeTeamGoals === match.awayTeamGoals) {
-          overAll.totalDraws += 1;
-        }
-      });
-
-      // total de derrotas
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam && match.homeTeamGoals < match.awayTeamGoals) {
-          overAll.totalLosses += 1;
-        }
-      });
-
-      // total de gols a favor
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam) {
-          overAll.goalsFavor += match.homeTeamGoals;
-        }
-      });
-
-      // total de gols contra
-      matches.forEach((match) => {
-        if (team.id === match.homeTeam) {
-          overAll.goalsOwn += match.awayTeamGoals;
-        }
-      });
-
-      // total media de gols
-      overAll.goalsBalance = overAll.goalsFavor - overAll.goalsOwn;
-
-      // aproveitamento
-      // [P / (J * 3)] * 100
-      overAll.efficiency = Number(((overAll.totalPoints / (overAll.totalGames * 3)) * 100).toFixed(2));
-
       return overAll;
     });
+  }
 
-    const testeSort = [...teste].sort((a, b) =>
-      b.totalPoints - a.totalPoints
-      || b.totalVictories - a.totalVictories
-      || b.goalsBalance - a.goalsBalance
-      || b.goalsFavor - a.goalsFavor
+  getTotalHomePoints() {
+    this._overAll.forEach((team) => {
+      this._matches.forEach((match) => {
+        if (team.name === match.teamHome?.teamName) {
+          const t = team;
+          if (match.homeTeamGoals > match.awayTeamGoals) {
+            t.totalVictories += 1;
+            t.totalPoints += 3;
+          }
+          if (match.homeTeamGoals === match.awayTeamGoals) {
+            t.totalDraws += 1;
+            t.totalPoints += 1;
+          }
+          if (match.homeTeamGoals < match.awayTeamGoals) t.totalLosses += 1;
+          return t;
+        }
+      });
+    });
+    this.getBalanceHomePoints();
+  }
+
+  getTotalAwayPoints() {
+    this._overAll.forEach((team) => {
+      this._matches.forEach((match) => {
+        if (team.name === match.teamAway?.teamName) {
+          const t = team;
+          if (match.homeTeamGoals < match.awayTeamGoals) {
+            t.totalVictories += 1;
+            t.totalPoints += 3;
+          }
+          if (match.homeTeamGoals === match.awayTeamGoals) {
+            t.totalDraws += 1;
+            t.totalPoints += 1;
+          }
+          if (match.homeTeamGoals > match.awayTeamGoals) t.totalLosses += 1;
+          return t;
+        }
+      });
+    });
+    this.getBalanceAwayPoints();
+  }
+
+  getBalanceHomePoints() {
+    this._overAll.forEach((team) => {
+      this._matches.forEach((match) => {
+        if (team.name === match.teamHome?.teamName) {
+          const t = team;
+          t.totalGames += 1;
+          t.goalsFavor += match.homeTeamGoals;
+          t.goalsOwn += match.awayTeamGoals;
+          t.goalsBalance = team.goalsFavor - team.goalsOwn;
+          t.efficiency = Number(((team.totalPoints / (team.totalGames * 3)) * 100).toFixed(2));
+          return t;
+        }
+      });
+    });
+  }
+
+  getBalanceAwayPoints() {
+    this._overAll.forEach((team) => {
+      this._matches.forEach((match) => {
+        if (team.name === match.teamAway?.teamName) {
+          const t = team;
+          t.totalGames += 1;
+          t.goalsFavor += match.awayTeamGoals;
+          t.goalsOwn += match.homeTeamGoals;
+          t.goalsBalance = team.goalsFavor - team.goalsOwn;
+          t.efficiency = Number(((team.totalPoints / (team.totalGames * 3)) * 100).toFixed(2));
+          return t;
+        }
+      });
+    });
+  }
+
+  getClassificationOrder(param: string) {
+    this.getTeams();
+    this.getMatches();
+    this.getOverAll();
+    if (param === 'home') {
+      this.getTotalHomePoints();
+    }
+    if (param === 'away') {
+      this.getTotalAwayPoints();
+    }
+    if (param === 'all') {
+      this.getTotalHomePoints();
+      this.getTotalAwayPoints();
+    }
+    // this.getTotalWhateverPoints();
+    const sort = [...this._overAll].sort((a, b) =>
+      b.totalPoints - a.totalPoints || b.totalVictories - a.totalVictories
+      || b.goalsBalance - a.goalsBalance || b.goalsFavor - a.goalsFavor
       || b.goalsOwn + a.goalsOwn);
-    return Promise.all(testeSort);
+    return sort;
   }
 }
-
-// export default class UserService {
-//   userModel = new UserModel();
-
-//   async insertUser(user: IUser): Promise<string> {
-//     await this.userModel.insertUser(user);
-//     const result = await this.createToken(user);
-//     return result;
-//   }
-// }

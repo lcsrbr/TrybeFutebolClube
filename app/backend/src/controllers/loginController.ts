@@ -13,13 +13,9 @@ export default class LoginController {
   }
 
   async validateLogin(req: Request, res: Response) {
-    const { email, password } = req.body;
-    const validate = await this.loginService.validateLogin(email, password);
-    if (typeof validate !== 'number') {
-      const token = await this.jwt.createToken(req.body);
-      return res.status(200).json({ token });
-    }
-    const message = validate === 400 ? 'All fields must be filled' : 'Incorrect email or password';
-    return res.status(validate).json({ message });
+    const { email } = req.body;
+    await this.loginService.validateLogin(email);
+    const token = await this.jwt.createToken(req.body);
+    return res.status(200).json({ token });
   }
 }
