@@ -1,10 +1,10 @@
 import Matches from '../database/models/Matches';
 
-interface blablabla {
+interface teamName {
   teamName: string
 }
 
 export default interface IMatchesWithName extends Matches {
-  teamHome?: blablabla;
-  teamAway?: blablabla;
+  teamHome?: teamName;
+  teamAway?: teamName;
 }

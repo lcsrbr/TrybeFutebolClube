@@ -12,9 +12,9 @@ export default class LoginController {
     return response.status(200).json({ role: result && result.role });
   }
 
-  async validateLogin(req: Request, res: Response) {
+  async getEmail(req: Request, res: Response) {
     const { email } = req.body;
-    await this.loginService.validateLogin(email);
+    await this.loginService.getEmail(email);
     const token = await this.jwt.createToken(req.body);
     return res.status(200).json({ token });
   }

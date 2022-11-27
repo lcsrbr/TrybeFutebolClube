@@ -10,8 +10,7 @@ export default class LbService {
 
   async getTeams() {
     this._teams = await Teams.findAll();
-    const aa = await Teams.findAll();
-    return aa;
+    return this._teams;
   }
 
   async getMatches() {
@@ -43,7 +42,7 @@ export default class LbService {
     });
   }
 
-  getTotalHomePoints() {
+  getTotalHomeGoals() {
     this._overAll.forEach((team) => {
       this._matches.forEach((match) => {
         if (team.name === match.teamHome?.teamName) {
@@ -61,10 +60,10 @@ export default class LbService {
         }
       });
     });
-    this.getBalanceHomePoints();
+    this.getOverAllHomePoints();
   }
 
-  getTotalAwayPoints() {
+  getTotalAwayGoals() {
     this._overAll.forEach((team) => {
       this._matches.forEach((match) => {
         if (team.name === match.teamAway?.teamName) {
@@ -82,10 +81,10 @@ export default class LbService {
         }
       });
     });
-    this.getBalanceAwayPoints();
+    this.getOverAllAwayPoints();
   }
 
-  getBalanceHomePoints() {
+  getOverAllHomePoints() {
     this._overAll.forEach((team) => {
       this._matches.forEach((match) => {
         if (team.name === match.teamHome?.teamName) {
@@ -101,7 +100,7 @@ export default class LbService {
     });
   }
 
-  getBalanceAwayPoints() {
+  getOverAllAwayPoints() {
     this._overAll.forEach((team) => {
       this._matches.forEach((match) => {
         if (team.name === match.teamAway?.teamName) {
@@ -122,14 +121,14 @@ export default class LbService {
     this.getMatches();
     this.getOverAll();
     if (param === 'home') {
-      this.getTotalHomePoints();
+      this.getTotalHomeGoals();
     }
     if (param === 'away') {
-      this.getTotalAwayPoints();
+      this.getTotalAwayGoals();
     }
     if (param === 'all') {
-      this.getTotalHomePoints();
-      this.getTotalAwayPoints();
+      this.getTotalHomeGoals();
+      this.getTotalAwayGoals();
     }
     // this.getTotalWhateverPoints();
     const sort = [...this._overAll].sort((a, b) =>

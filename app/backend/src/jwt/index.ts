@@ -15,7 +15,7 @@ export default class JwtService {
     return token;
   };
 
-  validateToken = (token: string): jwt.JwtPayload | null => {
+  validateToken = (token: string): (jwt.JwtPayload | null) => {
     try {
       const secret = process.env.JWT_SECRET || 'jwt_secret';
       const validation = jwt.verify(token, secret);

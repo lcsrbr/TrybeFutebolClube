@@ -15,7 +15,7 @@ export default class LoginService {
     return login;
   }
 
-  public async validateLogin(email:string) :Promise<Users | null> {
+  public async getEmail(email:string) :Promise<Users | null> {
     const login = await this.users.findOne({ where: { email } });
     return login;
   }

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { compareSync } from 'bcryptjs';
 import Users from '../database/models/Users';
 
-export default async function validateLogin(req: Request, res: Response, next: NextFunction) {
+export default async function midLogin(req: Request, res: Response, next: NextFunction) {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ message: 'All fields must be filled' });
