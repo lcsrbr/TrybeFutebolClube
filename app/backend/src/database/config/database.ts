@@ -6,7 +6,7 @@ const config: Options = {
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
   host: process.env.MYSQLHOST,
-  port: process.env.MYSQLPORT,
+  port: Number(process.env.MYSQLPORT),
   dialect: 'mysql',
   dialectOptions: {
     timezone: 'Z',
