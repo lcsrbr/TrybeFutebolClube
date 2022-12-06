@@ -10,8 +10,4 @@ const config: Options = {
   dialect: 'mysql',
 }
 
-module.exports = {
-  development: config,
-  test: config,
-  production: config,
-};
+module.exports = config;
