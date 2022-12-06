@@ -1,4 +1,5 @@
 # Boas-vindas ao repositório do projeto Trybe Futebol Clube!
+ [Acesse o projeto aqui!](https://frontend-production-5124.up.railway.app/leaderboard) 
 
 <strong>Projeto realizando durante o curso de _Desenvolvimento Web da Trybe_.</strong>
 <img src='https://raw.githubusercontent.com/lcsrbr/TrybeFutebolClube/main/imgs/aprovacao.png'></img>
@@ -20,9 +21,5 @@ Para acessar o projeto, atente-se a cada passo descrito a seguir, e se tiver qua
 - BCryptJS
 - SOLID
 - POO
-
-## Orientações
-
-  - [Acesse o projeto aqui!](https://frontend-production-5124.up.railway.app/leaderboard) 
 
   # [Outros Projetos](https://portfolio-bay-omega-17.vercel.app/#projetos)
